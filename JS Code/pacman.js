@@ -163,18 +163,29 @@ document.addEventListener("DOMContentLoaded", () => {
   ghosts.forEach(ghost => moveGhost(ghost))
 
   function moveGhost(ghost) {
-    const directions =  [-1, +1, width, -width]
-    let direction = directions[Math.floor(Math.random() * directions.length)]
+    const directionsPositive = [+1, width];
+    const directionsNegative = [-1, -width];
+    let directionPositive = directionsPositive[Math.floor(Math.random() * directionsPositive.length)]
+    let directionNegative = directionsNegative[Math.floor(Math.random() * directionsNegative.length)]
 
     ghost.timerId = setInterval(function() {
-      if  (!panels[ghost.currentIndex + direction].classList.contains("ghost") &&
-          !panels[ghost.currentIndex + direction].classList.contains("wall") ) {
+    if ( pacmanCurrentIndex < ghost.currentIndex){
+      if  (!panels[ghost.currentIndex + directionPositive].classList.contains("ghost") &&
+          !panels[ghost.currentIndex + directionPositive].classList.contains("wall") ) {
               panels[ghost.currentIndex].classList.remove(ghost.className)
               panels[ghost.currentIndex].classList.remove("ghost", "scared-ghost")
-              ghost.currentIndex += direction
+              ghost.currentIndex += directionPositive
               panels[ghost.currentIndex].classList.add(ghost.className, "ghost")
-      } else direction = directions[Math.floor(Math.random() * directions.length)]
-
+      } else directionPositive
+    } else if (pacmanCurrentIndex > ghost.currentIndex) {
+      if  (!panels[ghost.currentIndex + directionNegative].classList.contains("ghost") &&
+            !panels[ghost.currentIndex + directionNegative].classList.contains("wall") ) {
+            panels[ghost.currentIndex].classList.remove(ghost.className)
+            panels[ghost.currentIndex].classList.remove("ghost", "scared-ghost")
+            ghost.currentIndex += directionNegative
+            panels[ghost.currentIndex].classList.add(ghost.className, "ghost")
+      } else directionNegative
+      }
       
       if (ghost.isScared && !panels[ghost.currentIndex].classList.contains("ghost-lair")) {
         panels[ghost.currentIndex].classList.add("scared-ghost")
