@@ -33,7 +33,7 @@ h2, span{
 }
 
 .pac-man {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/pacman/pacman-0.png");
+    background-image: url("./images/pacman/pacman-0.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
@@ -43,13 +43,13 @@ h2, span{
   
 @keyframes eat {
     0% {
-        background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/pacman/pacman-0.png");
+        background-image: url("./images/pacman/pacman-0.png");
     }
     50% {
-        background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/pacman/pacman-1.png");
+        background-image: url("./images/pacman/pacman-1.png");
     }
     100% {
-        background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/pacman/pacman-2.png");
+        background-image: url("./images/pacman/pacman-2.png");
     }
 }
 .move-up {
@@ -71,7 +71,7 @@ h2, span{
 }
 
 .pellet {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/pellet/pellet.png");
+    background-image: url("./images/pellet/pellet.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
@@ -79,42 +79,42 @@ h2, span{
 
 
 .power-pellet {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/pellet/power-pellet.png");
+    background-image: url("./images/pellet/power-pellet.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .blinky {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/ghosts/ghost-blinky-up.png");
+    background-image: url("./images/ghosts/ghost-blinky-up.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .pinky {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/ghosts/ghost-pinky-up.png");
+    background-image: url("./images/ghosts/ghost-pinky-up.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .inky {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/ghosts/ghost-inky-up.png");
+    background-image: url("./images/ghosts/ghost-inky-up.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .clyde {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/ghosts/ghost-clyde-up.png");
+    background-image: url("./images/ghosts/ghost-clyde-up.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .scared-ghost {
-    background-image: url("/Projects/PACMAN/Projekt/Style/Images/images/ghosts/ghost-fright.png");
+    background-image: url("./images/ghosts/ghost-fright.png");
     background-origin: border-box;
     background-repeat: no-repeat;
     background-position: center;
