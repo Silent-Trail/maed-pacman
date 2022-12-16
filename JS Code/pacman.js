@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplay = document.getElementById("score")
   const width = 28
   let score = 0
+  let counter = 1
   const level = document.querySelector(".level")
   const layout = [
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -150,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       score +=10
       ghosts.forEach(ghost => ghost.isScared = true)     
       setTimeout(unScareGhosts, 10000)
+      setTimeout(restartCounter, 10000)
       panels[pacmanCurrentIndex].classList.remove("power-pellet")
     }
   }
@@ -158,7 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ghosts.forEach(ghost => ghost.isScared = false)
   }
 
-
+  function restartCounter(){
+    counter = 1;
+  }
   //move the Ghosts 
   ghosts.forEach(ghost => moveGhost(ghost))
 
@@ -175,19 +179,19 @@ document.addEventListener("DOMContentLoaded", () => {
               panels[ghost.currentIndex].classList.add(ghost.className, "ghost")
       } else direction = directions[Math.floor(Math.random() * directions.length)]
 
-      
       if (ghost.isScared && !panels[ghost.currentIndex].classList.contains("ghost-lair")) {
         panels[ghost.currentIndex].classList.add("scared-ghost")
       }
-
+      
       //scared ghost vs. pacman
       if(ghost.isScared && panels[ghost.currentIndex].classList.contains("pac-man")) {
         panels[ghost.currentIndex].classList.remove(ghost.className, "ghost", "scared-ghost")
         ghost.currentIndex = ghost.startIndex
-        score +=100
+        score +=400*counter
+        counter++
         setTimeout(()=>{panels[ghost.currentIndex].classList.add(ghost.className, "ghost")}, 5000)
       }
-    checkForGameOver()
+      checkForGameOver()
     }, ghost.speed)
   }
 
@@ -200,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.removeEventListener("keyup", movePacman)
       setTimeout(function(){ alert("Game Over"); }, 500)
     }
-    if (score === 274) {
+    if (!panels.classList.contains("pellet")) {
       ghosts.forEach(ghost => clearInterval(ghost.timerId))
       document.removeEventListener("keyup", movePacman)
       setTimeout(function(){ alert("You have WON!"); }, 500)
@@ -208,3 +212,4 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 })
+
