@@ -1,4 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", startGame);
+
+function startGame() {
   const scoreDisplay = document.getElementById("score");
   const width = 28;
   let score = 0;
@@ -42,19 +44,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2 - ghost-lair
   // 3 - power-pellet
   // 4 - empty
+  const PELLET_ID = 0;
+  const WALL_ID = 1;
 
   const panels = [];
 
-  //create your board
   function createBoard() {
     for (let i = 0; i < layout.length; i++) {
       const panel = document.createElement("div");
       level.appendChild(panel);
       panels.push(panel);
 
-      if (layout[i] === 0) {
+      if (layout[i] === PELLET_ID) {
         panels[i].classList.add("pellet");
-      } else if (layout[i] === 1) {
+      } else if (layout[i] === WALL_ID) {
         panels[i].classList.add("wall");
       } else if (layout[i] === 2) {
         panels[i].classList.add("ghost-lair");
@@ -77,34 +80,36 @@ document.addEventListener("DOMContentLoaded", () => {
       this.currentIndex = startIndex;
       this.isScared = false;
       this.timerId = NaN;
+
+      panels[this.currentIndex].classList.add(this.className);
+      panels[this.currentIndex].classList.add("ghost");
     }
   }
 
-  ghosts = [
+  const ghosts = [
     new Ghost("blinky", 348, 250),
     new Ghost("pinky", 376, 400),
     new Ghost("inky", 351, 300),
     new Ghost("clyde", 379, 500),
   ];
 
-  //draw ghosts
-  ghosts.forEach((ghost) => {
-    panels[ghost.currentIndex].classList.add(ghost.className);
-    panels[ghost.currentIndex].classList.add("ghost");
-  });
-
-  //move pacman
   function movePacman(e) {
+    const KEY_LEFT = 37;
+    const EXIT_LEFT = 363;
+    const EXIT_RIGHT = 391;
+
     panels[pacmanCurrentIndex].classList.remove("pac-man");
+
     switch (e.keyCode) {
-      case 37:
+      case KEY_LEFT:
         if (
           !panels[pacmanCurrentIndex - 1].classList.contains("wall") &&
           !panels[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
-        )
+        ) { 
           pacmanCurrentIndex -= 1;
-        if (panels[pacmanCurrentIndex - 1] === panels[363]) {
-          pacmanCurrentIndex = 391;
+        }
+        if (panels[pacmanCurrentIndex - 1] === panels[EXIT_LEFT]) {
+          pacmanCurrentIndex = EXIT_RIGHT;
         }
         break;
       case 38:
@@ -132,14 +137,15 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex += width;
         break;
     }
+
     panels[pacmanCurrentIndex].classList.add("pac-man");
-    palletEaten();
+    eatPellet();
     powerPelletEaten();
     checkForGameOver();
   }
   document.addEventListener("keydown", movePacman);
 
-  function palletEaten() {
+  function eatPellet() {
     if (panels[pacmanCurrentIndex].classList.contains("pellet")) {
       score++;
       scoreDisplay.innerHTML = score;
@@ -150,18 +156,25 @@ document.addEventListener("DOMContentLoaded", () => {
   function powerPelletEaten() {
     if (panels[pacmanCurrentIndex].classList.contains("power-pellet")) {
       score += 10;
-      ghosts.forEach((ghost) => (ghost.isScared = true));
+      scareGhosts();
       setTimeout(unScareGhosts, 10000);
       panels[pacmanCurrentIndex].classList.remove("power-pellet");
     }
+  }
+
+  function scareGhosts() {
+    ghosts.forEach((ghost) => (ghost.isScared = true))
   }
 
   function unScareGhosts() {
     ghosts.forEach((ghost) => (ghost.isScared = false));
   }
 
-  //move the Ghosts
-  ghosts.forEach((ghost) => moveGhost(ghost));
+  function moveGhosts() {
+    ghosts.forEach((ghost) => moveGhost(ghost));
+  }
+
+  moveGhosts();
 
   function moveGhost(ghost) {
     const directionsPositive = [+1, width];
@@ -173,10 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ghost.timerId = setInterval(function () {
       if (pacmanCurrentIndex < ghost.currentIndex) {
+        const isGhost = !panels[ghost.currentIndex + directionPositive].classList.contains("ghost");
         if (
-          !panels[ghost.currentIndex + directionPositive].classList.contains(
-            "ghost"
-          ) &&
+          isGhost &&
           !panels[ghost.currentIndex + directionPositive].classList.contains(
             "wall"
           )
@@ -185,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
           panels[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
           ghost.currentIndex += directionPositive;
           panels[ghost.currentIndex].classList.add(ghost.className, "ghost");
-        } else directionPositive;
+        }
       } else if (pacmanCurrentIndex > ghost.currentIndex) {
         if (
           !panels[ghost.currentIndex + directionNegative].classList.contains(
@@ -229,24 +241,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }, ghost.speed);
   }
 
-  //End Game
   function checkForGameOver() {
     if (
       panels[pacmanCurrentIndex].classList.contains("ghost") &&
       !panels[pacmanCurrentIndex].classList.contains("scared-ghost")
     ) {
-      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
-      document.removeEventListener("keyup", movePacman);
-      setTimeout(function () {
-        alert("Game Over");
-      }, 500);
+      gameOver("Game Over");
     }
     if (score === 274) {
-      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
-      document.removeEventListener("keyup", movePacman);
-      setTimeout(function () {
-        alert("You have WON!");
-      }, 500);
+      gameOver("You have WON!");
     }
   }
-});
+
+  function gameOver(msg) {
+    ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+    document.removeEventListener("keyup", movePacman);
+    setTimeout(function () {
+      alert(msg);
+    }, 500);
+  }
+}
